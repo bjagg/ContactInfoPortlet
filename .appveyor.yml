@@ -1,0 +1,16 @@
+environment:
+  JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+os: Visual Studio 2017 # Windows Server 2016
+install:
+  - java -version
+  - mvn --version
+build_script:
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+test_script:
+  - mvn test --batch-mode
+  - mvn fmt:check --batch-mode
+  - mvn license:check --batch-mode
+  - mvn notice:check --batch-mode
+  - mvn javadoc:javadoc --batch-mode
+cache:
+  - C:\Users\appveyor\.m2\ -> pom.xml
