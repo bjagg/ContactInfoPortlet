@@ -1,8 +1,13 @@
 package org.apereo.portlet.contact.employee.mvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.RenderRequest;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.portlet.contact.employee.entity.DirectoryInfo;
 import org.apereo.portlet.contact.employee.entity.EmployeeInfo;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 @Controller
 @RequestMapping("VIEW")
@@ -22,6 +28,8 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 public class EmployeeController {
 
     @Autowired private EmployeeService service;
+
+    @Autowired private ObjectMapper mapper;
 
     @Transactional(readOnly = true)
     @RenderMapping
@@ -59,6 +67,46 @@ public class EmployeeController {
         }
 
         return mav;
+    }
+
+    @Transactional(readOnly = true)
+    @ResourceMapping(value = "emp-info")
+    public void employeeInfoResource(final ResourceRequest request, ResourceResponse response)
+            throws IOException {
+        log.debug("Processing AJAX resource request");
+
+        final EmployeeRequestContext context = new EmployeeRequestContext(request);
+
+        final Map<String, Object> results = new HashMap<>();
+
+        final boolean doUpdate = service.infoRequiresUpdate(context);
+        results.put("updateRequired", doUpdate);
+        if (doUpdate) {
+            log.debug("Employee directory info update required");
+
+            DirectoryInfo directoryInfo = service.getDirectoryInfo(context);
+            if (directoryInfo != null) {
+                log.debug(directoryInfo.toString());
+            } else {
+                log.debug("No directory info found");
+                directoryInfo = new DirectoryInfo();
+            }
+            results.put("directoryInfo", directoryInfo);
+
+            EmployeeInfo employeeInfo = service.getEmployeeInfo(context);
+            if (employeeInfo != null) {
+                log.debug(employeeInfo.toString());
+            } else {
+                log.debug("No employee info found");
+                employeeInfo = new EmployeeInfo();
+            }
+            results.put("employeeInfo", employeeInfo);
+        } else {
+            log.debug("No employee directory info update required");
+        }
+
+        final String json = mapper.writeValueAsString(results);
+        response.getWriter().write(json);
     }
 
     @Transactional

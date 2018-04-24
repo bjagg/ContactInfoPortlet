@@ -103,6 +103,9 @@
 </c:otherwise>
 </c:choose>
 
+<portlet:resourceURL var="empInfo" id="emp-info"/>
+<a href="${empInfo}"> this is a resource URL</a>
+
 <!--
     <h3>Testing (debug info)</h3>
     <p><pre>${updateRequired}</pre></p>

@@ -14,9 +14,16 @@
  */
 package org.apereo.portlet.contact.student.mvc;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.RenderRequest;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.portlet.contact.student.entity.CommunicationPreferences;
 import org.apereo.portlet.contact.student.entity.ContactInfo;
@@ -30,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 /** Main portlet view for Students */
 @Controller
@@ -39,9 +47,11 @@ public class StudentController {
 
     @Autowired private StudentService service;
 
+    @Autowired private ObjectMapper mapper;
+
     @Transactional(readOnly = true)
     @RenderMapping
-    public ModelAndView showMainView(final RenderRequest request) {
+    public ModelAndView showStudentView(final RenderRequest request) {
         log.debug("Processing student view for {}", request.getRemoteUser());
 
         final StudentRequestContext context = new StudentRequestContext(request);
@@ -83,9 +93,55 @@ public class StudentController {
         return mav;
     }
 
+    @Transactional(readOnly = true)
+    @ResourceMapping(value = "student-info")
+    public void studentInfoResource(final ResourceRequest request, final ResourceResponse response)
+            throws IOException {
+        log.debug("Processing AJAX resource request");
+
+        final StudentRequestContext context = new StudentRequestContext(request);
+
+        final Map<String, Object> results = new HashMap<>();
+
+        final boolean doUpdate = service.infoRequiresUpdate(context);
+        results.put("updateRequired", doUpdate);
+        if (doUpdate) {
+            log.debug("Contact info update required");
+
+            final ContactInfo info = service.getContactInfo(context);
+            log.debug(info.toString());
+            results.put("contactInfo", info);
+
+            final CommunicationPreferences comPref = service.getCommunicationPreferences(context);
+            if (comPref != null) {
+                log.debug(comPref.toString());
+            } else {
+                log.debug("No communications preferences found");
+            }
+            final Boolean showComPref = comPref == null;
+            log.debug("Prompting for communication preferences: {}", showComPref);
+            results.put("showCommunicationPreferences", showComPref);
+
+            final Ethnicity ethnicity = service.getEthnicity(context);
+            if (ethnicity != null) {
+                log.debug(ethnicity.toString());
+            } else {
+                log.debug("No ethnicity found");
+            }
+            Boolean showEthnicity = ethnicity == null;
+            log.debug("showEthnicity: {}", showEthnicity);
+            results.put("showEthnicity", showEthnicity);
+        } else {
+            log.debug("No contact info update required");
+        }
+
+        final String json = mapper.writeValueAsString(results);
+        response.getWriter().write(json);
+    }
+
     @Transactional
     @ActionMapping
-    public void doAction(final ActionRequest request) {
+    public void saveStudentAction(final ActionRequest request) {
         log.debug("Processing save action");
         for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
             log.debug(entry.toString());
