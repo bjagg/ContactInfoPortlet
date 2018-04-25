@@ -1,1 +1,1 @@
-{ "name": "Robert M Ross", "address": "6 Bradford St", "city": "Dayton", "county": "MO", "state": "OH", "zipCode": "45410-2938", "phoneNumber": "937-533-5462" }
+{ "name": "Robert M Ross", "address": "6 Bradford St", "city": "Dayton", "county": "MO", "state": "OH", "zipCode": "45410-2938", "phoneNumber": "937-533-5462", "race":["WH"], "ethnicity":["NHS"]}

@@ -14,16 +14,14 @@
  */
 package org.apereo.portlet.contact.student.mvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.portlet.contact.student.entity.CommunicationPreferences;
 import org.apereo.portlet.contact.student.entity.ContactInfo;
