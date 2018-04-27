@@ -1,14 +1,14 @@
 package org.apereo.portlet.contact.student.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -17,7 +17,7 @@ import lombok.NonNull;
 @Entity
 @Table(name = "contact_info")
 public class ContactInfo {
-    @Id @NonNull private String username;
+    @Id private String username;
     private String address;
     private String city;
     private String state;
