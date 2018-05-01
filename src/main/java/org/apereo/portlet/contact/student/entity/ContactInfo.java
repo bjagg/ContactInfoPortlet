@@ -15,7 +15,11 @@
 package org.apereo.portlet.contact.student.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -31,6 +35,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "contact_info")
 public class ContactInfo {
     @Id private String username;
+    private String name;
     private String address;
     private String city;
     private String state;
@@ -47,4 +52,12 @@ public class ContactInfo {
 
     @Column(name = "alt_phone")
     private String altPhone;
+
+    @ElementCollection
+    @CollectionTable(name = "contact_info_race")
+    private List<String> race = new ArrayList();
+
+    @ElementCollection
+    @CollectionTable(name = "contact_info_ethnicity")
+    private List<String> ethnicity = new ArrayList();
 }

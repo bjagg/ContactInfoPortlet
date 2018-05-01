@@ -14,19 +14,22 @@
  */
 package org.apereo.portlet.contact.student.mvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.portlet.contact.common.util.CodeDesc;
 import org.apereo.portlet.contact.student.entity.CommunicationPreferences;
 import org.apereo.portlet.contact.student.entity.ContactInfo;
-import org.apereo.portlet.contact.student.entity.Ethnicity;
 import org.apereo.portlet.contact.student.service.StudentRequestContext;
 import org.apereo.portlet.contact.student.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,15 +79,8 @@ public class StudentController {
             log.debug("Prompting for communication preferences: {}", showComPref);
             mav.addObject("showCommunicationPreferences", showComPref);
 
-            final Ethnicity ethnicity = service.getEthnicity(context);
-            if (ethnicity != null) {
-                log.debug(ethnicity.toString());
-            } else {
-                log.debug("No ethnicity found");
-            }
-            Boolean showEthnicity = ethnicity == null;
-            log.debug("showEthnicity: {}", showEthnicity);
-            mav.addObject("showEthnicity", showEthnicity);
+            mav.addObject("races", service.getRaceList(context));
+            mav.addObject("ethnicities", service.getEthnicityList(context));
         } else {
             log.debug("No contact info update required");
         }
@@ -145,15 +141,6 @@ public class StudentController {
             log.debug("Prompting for communication preferences: {}", showComPref);
             results.put("showCommunicationPreferences", showComPref);
 
-            final Ethnicity ethnicity = service.getEthnicity(context);
-            if (ethnicity != null) {
-                log.debug(ethnicity.toString());
-            } else {
-                log.debug("No ethnicity found");
-            }
-            Boolean showEthnicity = ethnicity == null;
-            log.debug("showEthnicity: {}", showEthnicity);
-            results.put("showEthnicity", showEthnicity);
         } else {
             log.debug("No contact info update required");
         }
@@ -188,6 +175,18 @@ public class StudentController {
         info.setPhoneNumber(request.getParameter("phoneNumber"));
         info.setMobile(request.getParameter("is-mobile") != null);
         info.setAltPhone(request.getParameter("altPhone"));
+        List<String> race = info.getRace();
+        race.clear();
+        String[] raceValues = request.getParameterValues("race");
+        if (raceValues != null) {
+            race.addAll(Arrays.asList(raceValues));
+        }
+        List<String> ethnicity = info.getEthnicity();
+        ethnicity.clear();
+        String ethnicityValue = request.getParameter("ethnicity");
+        if (ethnicityValue != null) {
+            ethnicity.add(ethnicityValue);
+        }
         log.debug(info.toString());
         log.debug("Saving contact info...");
         service.saveContactInfo(info);
@@ -206,25 +205,6 @@ public class StudentController {
             log.debug(comPref.toString());
             log.debug("saving communication preferences ...");
             service.saveCommunicationPreferences(comPref);
-        }
-
-        // ethnicity
-        // business rule: only 1 update ever
-        Ethnicity ethnicity = service.getEthnicity(context);
-        if (ethnicity != null) {
-            log.debug("Ethnicity already saved -- skipping");
-        } else {
-            ethnicity = new Ethnicity(context.getUsername());
-            ethnicity.setNativeAmerican(request.getParameter("american-native") != null);
-            ethnicity.setAsian(request.getParameter("asian") != null);
-            ethnicity.setAfrican(request.getParameter("black") != null);
-            ethnicity.setHispanic(request.getParameter("hispanic") != null);
-            ethnicity.setPacificIslander(request.getParameter("pacific-islander") != null);
-            ethnicity.setWhite(request.getParameter("white") != null);
-            ethnicity.setNotDisclosed(request.getParameter("not-declared") != null);
-            log.debug(ethnicity.toString());
-            log.debug("Saving ethnicity ...");
-            service.saveEthnicity(ethnicity);
         }
 
         log.debug("Refreshing last update for {} ... ", context.getUsername());

@@ -18,7 +18,6 @@ import org.apereo.portlet.contact.common.entity.UserLastUpdate;
 import org.apereo.portlet.contact.common.util.CodeDesc;
 import org.apereo.portlet.contact.student.entity.CommunicationPreferences;
 import org.apereo.portlet.contact.student.entity.ContactInfo;
-import org.apereo.portlet.contact.student.entity.Ethnicity;
 
 /** Main service class for student contact info. */
 public interface StudentService {
@@ -71,21 +70,6 @@ public interface StudentService {
      * @param comPref data to persist
      */
     void saveCommunicationPreferences(CommunicationPreferences comPref);
-
-    /**
-     * Find ethnicity declaration from various sources, including local database.
-     *
-     * @param context collection of request values, such as username and contact info URL
-     * @return {@link Ethnicity} or null
-     */
-    Ethnicity getEthnicity(StudentRequestContext context);
-
-    /**
-     * Save {@link Ethnicity} to local database.
-     *
-     * @param ethnicity data to persist
-     */
-    void saveEthnicity(Ethnicity ethnicity);
 
     /**
      * Get list of the race codes and descriptions.

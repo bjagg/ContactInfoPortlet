@@ -22,7 +22,6 @@ import org.apereo.portlet.contact.common.entity.UserLastUpdate;
 import org.apereo.portlet.contact.common.util.CodeDesc;
 import org.apereo.portlet.contact.student.entity.CommunicationPreferences;
 import org.apereo.portlet.contact.student.entity.ContactInfo;
-import org.apereo.portlet.contact.student.entity.Ethnicity;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -151,23 +150,6 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void saveCommunicationPreferences(CommunicationPreferences comPref) {
         em.merge(comPref);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Ethnicity getEthnicity(StudentRequestContext context) {
-        // will be included in contact info feed
-        final Ethnicity ethnicity = em.find(Ethnicity.class, context.getUsername());
-        if (ethnicity != null) {
-            em.detach(ethnicity);
-        }
-        return ethnicity;
-    }
-
-    @Transactional
-    @Override
-    public void saveEthnicity(Ethnicity ethnicity) {
-        em.merge(ethnicity);
     }
 
     @Override

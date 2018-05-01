@@ -101,54 +101,30 @@
     </fieldset>
     </c:if>
 
-    <c:if test="${showEthnicity}">
     <h3 class="font-weight-bold"><spring:message code="ethnicity.title"/></h3>
     <p class="small text-muted"><spring:message code="ethnicity.description"/></p>
     <fieldset>
-    <div class="checkbox american-native">
-        <label for="american-native">
-            <input type="checkbox" name="american-native" id="american-native"/>
-            <spring:message code="ethnicity.american-native"/>
+    <c:forEach items="${races}" var="race">
+    <c:set var="checked" value="${contactInfo.race.contains(race.code)}"/>
+    <div class="checkbox">
+        <label for="${race.code}">
+            <input type="checkbox" name="race" id="${race.code}" value="${race.code}" ${checked ? 'checked' : ''}/>
+            <c:out value="${race.description}"/>
         </label>
     </div>
-    <div class="checkbox asian">
-        <label for="asian">
-            <input type="checkbox" name="asian" id="asian"/>
-            <spring:message code="ethnicity.asian"/>
-        </label>
-    </div>
-    <div class="checkbox black">
-        <label for="black">
-            <input type="checkbox" name="black" id="black"/>
-            <spring:message code="ethnicity.black"/>
-        </label>
-    </div>
-    <div class="checkbox hispanic">
-        <label for="hispanic">
-            <input type="checkbox" name="hispanic" id="hispanic"/>
-            <spring:message code="ethnicity.hispanic"/>
-        </label>
-    </div>
-    <div class="checkbox pacific-islander">
-        <label for="pacific-islander">
-            <input type="checkbox" name="pacific-islander" id="pacific-islander"/>
-            <spring:message code="ethnicity.pacific-islander"/>
-        </label>
-    </div>
-    <div class="checkbox white">
-        <label for="white">
-            <input type="checkbox" name="white" id="white"/>
-            <spring:message code="ethnicity.white"/>
-        </label>
-    </div>
-    <div class="checkbox not-declared">
-        <label for="not-declared">
-            <input type="checkbox" name="not-declared" id="not-declared"/>
-            <spring:message code="ethnicity.not-declared"/>
-        </label>
-    </div>
+    </c:forEach>
     </fieldset>
-    </c:if>
+    <fieldset>
+    <c:forEach items="${ethnicities}" var="ethnicity">
+    <c:set var="checked" value="${contactInfo.ethnicity.contains(ethnicity.code)}"/>
+    <div class="radio">
+        <label for="${ethnicity.code}">
+            <input type="radio" name="ethnicity" id="${ethnicity.code}" value="${ethnicity.code}" ${checked ? 'checked' : ''}/>
+            <c:out value="${ethnicity.description}"/>
+        </label>
+    </div>
+    </c:forEach>
+    </fieldset>
 
     <div class="buttons text-center">
         <spring:message code="form.save" var="save"/>
