@@ -1,0 +1,16 @@
+[
+{ "Code": "AN", "Description": "American/Alaska Native" }
+,
+{ "Code": "AS", "Description": "Asian" }
+,
+{ "Code": "BL", "Description": "Black or African American" }
+,
+{ "Code": "HP", "Description": "Hawaiian/Pacific Islander" }
+,
+{ "Code": "WH", "Description": "White" }
+,
+{ "Code": "NR", "Description": "Not Reported" }
+,
+
+{ "Code": "NP", "Description": "Asian/Pacific Islander" }
+]
