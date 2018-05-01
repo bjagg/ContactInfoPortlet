@@ -59,6 +59,14 @@
                 <name>contactInfo.userId</name>
                 <value>tartanId</value>
             </preference>
+            <preference>
+                <name>race.url</name>
+                <value>http://localhost:8080/contact-info-portlet/sample/race.json</value>
+            </preference>
+            <preference>
+                <name>ethnicity.url</name>
+                <value>http://localhost:8080/contact-info-portlet/sample/ethnicity.json</value>
+            </preference>
         </portlet-preferences>
     </portlet>
 
