@@ -125,6 +125,19 @@ public class StudentServiceImpl implements StudentService {
         if (savedInfo != null) {
             info.setMobile(savedInfo.getMobile());
             info.setAltPhone(savedInfo.getAltPhone());
+            // populating from db
+            info.setAddress(savedInfo.getAddress());
+            info.setCity(savedInfo.getCity());
+            info.setState(savedInfo.getState());
+            info.setZipCode(savedInfo.getZipCode());
+            info.setCounty(savedInfo.getCounty());
+            info.setPhoneNumber(savedInfo.getPhoneNumber());
+            info.setMobile(savedInfo.getMobile());
+            info.setAltPhone(savedInfo.getAltPhone());
+            info.getRace().clear();
+            info.getRace().addAll(savedInfo.getRace());
+            info.getEthnicity().clear();
+            info.getEthnicity().addAll(savedInfo.getEthnicity());
         }
     }
 
