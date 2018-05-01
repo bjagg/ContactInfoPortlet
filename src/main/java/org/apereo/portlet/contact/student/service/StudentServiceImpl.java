@@ -23,6 +23,7 @@ import org.apereo.portlet.contact.common.util.CodeDesc;
 import org.apereo.portlet.contact.student.entity.CommunicationPreferences;
 import org.apereo.portlet.contact.student.entity.ContactInfo;
 import org.apereo.portlet.contact.student.entity.Ethnicity;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,18 +52,11 @@ public class StudentServiceImpl implements StudentService {
             return true;
         }
 
-        final String url = context.getTermsUrl();
-        if (url == null) {
-            log.error("Terms URL is null!!");
-            return true;
-        }
-        final RestTemplate restTemplate = new RestTemplate();
-        final TermFeed feed = restTemplate.getForObject(url, TermFeed.class);
+        TermFeed feed = getTermFeed(context);
         if (feed == null) {
-            log.error("Parsing JSON from {} failed", url);
+            log.error("Parsing JSON for termfeed failed");
             return true;
         }
-
         log.debug(feed.toString());
 
         final Term currentTerm = calcCurrentTerm(feed);
@@ -71,6 +65,19 @@ public class StudentServiceImpl implements StudentService {
             return false;
         }
         return currentTerm.getStartDate().after(lastUpdate);
+    }
+
+    @Cacheable("terms")
+    private TermFeed getTermFeed(StudentRequestContext context) {
+        TermFeed feed = null;
+        final String url = context.getTermsUrl();
+        if (url == null) {
+            log.error("Terms URL is null!!");
+        } else {
+            final RestTemplate restTemplate = new RestTemplate();
+            feed = restTemplate.getForObject(url, TermFeed.class);
+        }
+        return feed;
     }
 
     @Transactional
@@ -164,6 +171,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Cacheable("races")
     public CodeDesc[] getRaceList(StudentRequestContext context) {
         final String url = context.getRaceListUrl();
         final RestTemplate restTemplate = new RestTemplate();
@@ -172,6 +180,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Cacheable("ethnicities")
     public CodeDesc[] getEthnicityList(StudentRequestContext context) {
         final String url = context.getEthnicityListUrl();
         final RestTemplate restTemplate = new RestTemplate();

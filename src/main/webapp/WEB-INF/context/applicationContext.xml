@@ -78,5 +78,18 @@
         p:prefix="/WEB-INF/jsp/"
         p:suffix=".jsp" />
 
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"
+                      name="terms"/>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"
+                      name="races"/>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean"
+                      name="ethnicities"/>
+            </set>
+        </property>
+    </bean>
+
     <bean id="mapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
 </beans>
