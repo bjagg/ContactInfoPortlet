@@ -85,9 +85,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private void mergeSavedValues(DirectoryInfo info) {
+        assert info != null;
+        assert info.getUsername() != null;
         DirectoryInfo savedInfo = em.find(DirectoryInfo.class, info.getUsername());
         if (savedInfo != null) {
             info.setHours(savedInfo.getHours());
+            info.setTitle(savedInfo.getTitle());
+            info.setDept(savedInfo.getDept());
+            info.setPhone(savedInfo.getPhone());
+            info.setLocation(savedInfo.getLocation());
+            info.setFax(savedInfo.getFax());
+            info.setSupervisor(savedInfo.getSupervisor());
         }
     }
 
