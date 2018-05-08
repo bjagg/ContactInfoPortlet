@@ -73,8 +73,12 @@ public class StudentServiceImpl implements StudentService {
         if (url == null) {
             log.error("Terms URL is null!!");
         } else {
-            final RestTemplate restTemplate = new RestTemplate();
-            feed = restTemplate.getForObject(url, TermFeed.class);
+            try {
+                final RestTemplate restTemplate = new RestTemplate();
+                feed = restTemplate.getForObject(url, TermFeed.class);
+            } catch (Exception e) {
+                log.error("error reading terms from " + context.getTermsUrl(), e);
+            }
         }
         return feed;
     }
@@ -99,8 +103,13 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ContactInfo getContactInfo(StudentRequestContext context) {
         final String url = calcContactInfoUrl(context);
-        final RestTemplate restTemplate = new RestTemplate();
-        final ContactInfo info = restTemplate.getForObject(url, ContactInfo.class);
+        ContactInfo info = new ContactInfo();
+        try {
+            final RestTemplate restTemplate = new RestTemplate();
+            info = restTemplate.getForObject(url, ContactInfo.class);
+        } catch (Exception e) {
+            log.error("error reading student contact info from " + context.getContactInfoUrl(), e);
+        }
         info.setUsername(context.getUsername());
         log.debug(info.toString());
         mergeUnfetchedValues(info);
@@ -169,17 +178,29 @@ public class StudentServiceImpl implements StudentService {
     @Cacheable("races")
     public CodeDesc[] getRaceList(StudentRequestContext context) {
         final String url = context.getRaceListUrl();
-        final RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<CodeDesc[]> response = restTemplate.getForEntity(url, CodeDesc[].class);
-        return response.getBody();
+        CodeDesc[] codes = new CodeDesc[0];
+        try {
+            final RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<CodeDesc[]> response = restTemplate.getForEntity(url, CodeDesc[].class);
+            codes = response.getBody();
+        } catch (Exception e) {
+            log.error("error reading races url " + context.getRaceListUrl(), e);
+        }
+        return codes;
     }
 
     @Override
     @Cacheable("ethnicities")
     public CodeDesc[] getEthnicityList(StudentRequestContext context) {
         final String url = context.getEthnicityListUrl();
-        final RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<CodeDesc[]> response = restTemplate.getForEntity(url, CodeDesc[].class);
-        return response.getBody();
+        CodeDesc[] codes = new CodeDesc[0];
+        try {
+            final RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<CodeDesc[]> response = restTemplate.getForEntity(url, CodeDesc[].class);
+            codes = response.getBody();
+        } catch (Exception e) {
+            log.error("error reading ethnicities url " + context.getEthnicityListUrl(), e);
+        }
+        return codes;
     }
 }

@@ -75,9 +75,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public DirectoryInfo getDirectoryInfo(EmployeeRequestContext context) {
         final String url = calcDirectoryInfoUrl(context);
-        final RestTemplate restTemplate = new RestTemplate();
-        final EmployeeFeed feed = restTemplate.getForObject(url, EmployeeFeed.class);
-        final DirectoryInfo info = feed.toDirectoryInfo();
+        DirectoryInfo info = new DirectoryInfo();
+        try {
+            final RestTemplate restTemplate = new RestTemplate();
+            final EmployeeFeed feed = restTemplate.getForObject(url, EmployeeFeed.class);
+            info = feed.toDirectoryInfo();
+        } catch (Exception e) {
+            log.error("error reading directory info url " + context.getDirectoryUrl(), e);
+        }
         info.setUsername(context.getUsername());
         mergeSavedValues(info);
         log.debug(info.toString());
