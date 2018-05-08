@@ -64,7 +64,7 @@
     </fieldset>
     <div class="form-group hours">
         <label for="hours"><spring:message code="directory-info.hours"/></label>
-        <input type="text" class="form-control" name="hours" value="${directoryInfo.hours}"/>
+        <textarea class="form-control" name="hours" rows="3" cols="20"><c:out value="${directoryInfo.hours}"/></textarea>
     </div>
     <div class="form-group fax">
         <label for="fax"><spring:message code="directory-info.fax"/></label>
@@ -80,7 +80,7 @@
     <fieldset>
     <div class="form-group bio">
         <label for="bio"><spring:message code="employee-info.bio"/></label>
-        <input type="textarea" class="form-control" name="bio" value="${employeeInfo.bio}"/>
+        <textarea class="form-control" name="bio" rows="5"><c:out value="${employeeInfo.bio}"/></textarea>
     </div>
     <div class="form-group credentials">
         <label for="credentials"><spring:message code="employee-info.credentials"/></label>
