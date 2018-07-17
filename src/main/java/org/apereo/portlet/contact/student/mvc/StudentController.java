@@ -14,20 +14,24 @@
  */
 package org.apereo.portlet.contact.student.mvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.portlet.contact.common.util.CodeDesc;
 import org.apereo.portlet.contact.student.entity.CommunicationPreferences;
 import org.apereo.portlet.contact.student.entity.ContactInfo;
+import org.apereo.portlet.contact.student.service.ContactPreferences;
 import org.apereo.portlet.contact.student.service.StudentRequestContext;
 import org.apereo.portlet.contact.student.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -205,7 +209,35 @@ public class StudentController {
             service.saveCommunicationPreferences(comPref);
         }
 
+        if (context.getPrefsRemoteUrl() != null && !context.getPrefsRemoteUrl().isEmpty()) {
+            final String mobilePhone =
+                    info.getMobile() ? info.getPhoneNumber() : info.getAltPhone();
+            final String remoteJson = updateRemoteService(request, context, mobilePhone);
+        }
+
         log.debug("Refreshing last update for {} ... ", context.getUsername());
         service.refreshLastUpdate(context.getUsername());
+    }
+
+    private String updateRemoteService(
+            ActionRequest request, StudentRequestContext context, String mobilePhone) {
+        // update remote service
+        ContactPreferences remotePrefs = new ContactPreferences();
+        remotePrefs.setStudentId(context.getUserId());
+        remotePrefs.setUserName(context.getUsername());
+        remotePrefs.setReceiveSms(request.getParameter("sms"));
+        remotePrefs.setReceivePushNotification(request.getParameter("mobile-app"));
+        remotePrefs.setReceivePortalNotification(request.getParameter("portal"));
+        remotePrefs.setPhoneNumber(mobilePhone);
+        log.debug(remotePrefs.toString());
+        String json;
+        try {
+            json = mapper.writeValueAsString(remotePrefs);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            json = "{}";
+        }
+        log.debug(json);
+        return json;
     }
 }

@@ -31,6 +31,7 @@ public class StudentRequestContext {
     private static final String USER_ID_FOR_URL = "contactInfo.userId";
     private static final String RACE_URL = "race.url";
     private static final String ETHNICITY_URL = "ethnicity.url";
+    private static final String PREFS_REMOTE_URL = "contactPreferences.remote.url";
 
     private String termsUrl;
     private String contactInfoUrl;
@@ -40,6 +41,7 @@ public class StudentRequestContext {
     private String userId;
     private String raceListUrl;
     private String ethnicityListUrl;
+    private String prefsRemoteUrl;
 
     public StudentRequestContext(final PortletRequest request) {
         // Capture portlet preferences
@@ -50,6 +52,7 @@ public class StudentRequestContext {
         this.userIdParam = prefs.getValue(USER_ID_FOR_URL, "username");
         this.raceListUrl = prefs.getValue(RACE_URL, null);
         this.ethnicityListUrl = prefs.getValue(ETHNICITY_URL, null);
+        this.prefsRemoteUrl = prefs.getValue(PREFS_REMOTE_URL, null);
 
         // Get the USER_INFO from portlet.xml,
         // which gets it from personDirectoryContext.xml

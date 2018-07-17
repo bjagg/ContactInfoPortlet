@@ -67,6 +67,10 @@
                 <name>ethnicity.url</name>
                 <value>http://localhost:8080/contact-info-portlet/sample/ethnicity.json</value>
             </preference>
+            <preference>
+                <name>contactPreferences.remote.url</name>
+                <value></value>
+            </preference>
         </portlet-preferences>
     </portlet>
 
