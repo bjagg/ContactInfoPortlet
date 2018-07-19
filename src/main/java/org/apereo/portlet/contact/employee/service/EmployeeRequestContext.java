@@ -29,6 +29,9 @@ public class EmployeeRequestContext {
     private static final String DAYS_BETWEEN_UPDATE = "cycle.days";
     private static final String DIR_INFO_URL = "directoryInfo.url";
     private static final String USER_ID_FOR_URL = "directoryInfo.userId";
+    private static final String DEPARTMENTS_URL = "departments.url";
+    private static final String LOCATIONS_URL = "locations.url";
+    private static final String SUPERVISORS_URL = "supervisors.url";
 
     private int daysBetweenUpdate;
     private String directoryUrl;
@@ -36,6 +39,9 @@ public class EmployeeRequestContext {
     private String username;
     private String userIdParam;
     private String userId;
+    private String deptUrl;
+    private String locUrl;
+    private String supervisorUrl;
 
     public EmployeeRequestContext(final PortletRequest request) {
         // Capture portlet preferences
@@ -45,6 +51,9 @@ public class EmployeeRequestContext {
         this.directoryUrl = prefs.getValue(DIR_INFO_URL, null);
         this.overrideWindow = Boolean.parseBoolean(prefs.getValue(OVERRIDE_WINDOW, "false"));
         this.userIdParam = prefs.getValue(USER_ID_FOR_URL, "username");
+        this.deptUrl = prefs.getValue(DEPARTMENTS_URL, null);
+        this.locUrl = prefs.getValue(LOCATIONS_URL, null);
+        this.supervisorUrl = prefs.getValue(SUPERVISORS_URL, null);
 
         // Get the USER_INFO from portlet.xml,
         // which gets it from personDirectoryContext.xml

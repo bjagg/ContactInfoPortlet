@@ -22,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apereo.portlet.contact.common.entity.UserLastUpdate;
 import org.apereo.portlet.contact.employee.entity.DirectoryInfo;
 import org.apereo.portlet.contact.employee.entity.EmployeeInfo;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -134,5 +136,56 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void saveEmployeeInfo(EmployeeInfo info) {
         em.merge(info);
+    }
+
+    @Override
+    @Cacheable("departments")
+    public Department[] getDepartmentList(EmployeeRequestContext context) {
+        final String url = context.getDeptUrl();
+        Department[] depts = new Department[0];
+        try {
+            final RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<DepartmentFeed> response =
+                    restTemplate.getForEntity(url, DepartmentFeed.class);
+            DepartmentFeed feed = response.getBody();
+            depts = feed.getRows().toArray(depts);
+        } catch (Exception e) {
+            log.error("error reading departments url " + context.getDeptUrl(), e);
+        }
+        return depts;
+    }
+
+    @Override
+    @Cacheable("locations")
+    public Location[] getLocationList(EmployeeRequestContext context) {
+        final String url = context.getLocUrl();
+        Location[] locs = new Location[0];
+        try {
+            final RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<LocationFeed> response =
+                    restTemplate.getForEntity(url, LocationFeed.class);
+            LocationFeed feed = response.getBody();
+            locs = feed.getRows().toArray(locs);
+        } catch (Exception e) {
+            log.error("error reading locations url " + context.getLocUrl(), e);
+        }
+        return locs;
+    }
+
+    @Override
+    @Cacheable("supervisors")
+    public Supervisor[] getSupervisorList(EmployeeRequestContext context) {
+        final String url = context.getSupervisorUrl();
+        Supervisor[] supervisors = new Supervisor[0];
+        try {
+            final RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<SupervisorFeed> response =
+                    restTemplate.getForEntity(url, SupervisorFeed.class);
+            SupervisorFeed feed = response.getBody();
+            supervisors = feed.getRows().toArray(supervisors);
+        } catch (Exception e) {
+            log.error("error reading supervisors url " + context.getSupervisorUrl(), e);
+        }
+        return supervisors;
     }
 }

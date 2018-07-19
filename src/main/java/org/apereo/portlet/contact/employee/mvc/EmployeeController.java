@@ -14,19 +14,24 @@
  */
 package org.apereo.portlet.contact.employee.mvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.portlet.contact.employee.entity.DirectoryInfo;
 import org.apereo.portlet.contact.employee.entity.EmployeeInfo;
+import org.apereo.portlet.contact.employee.service.Department;
 import org.apereo.portlet.contact.employee.service.EmployeeRequestContext;
 import org.apereo.portlet.contact.employee.service.EmployeeService;
+import org.apereo.portlet.contact.employee.service.Location;
+import org.apereo.portlet.contact.employee.service.Supervisor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -172,5 +177,41 @@ public class EmployeeController {
 
         log.debug("Refreshing last update for {} ... ", context.getUsername());
         service.refreshLastUpdate(context.getUsername());
+    }
+
+    @ResourceMapping(value = "department-list")
+    public void departmentListResource(ResourceRequest request, ResourceResponse response)
+            throws IOException {
+        log.debug("Processing AJAX resource request for department list");
+
+        final EmployeeRequestContext context = new EmployeeRequestContext(request);
+        final Department[] depts = service.getDepartmentList(context);
+        final String json = mapper.writeValueAsString(depts);
+        log.debug("json of department list: {}", json);
+        response.getWriter().write(json);
+    }
+
+    @ResourceMapping(value = "location-list")
+    public void locationListResource(ResourceRequest request, ResourceResponse response)
+            throws IOException {
+        log.debug("Processing AJAX resource request for location list");
+
+        final EmployeeRequestContext context = new EmployeeRequestContext(request);
+        final Location[] locs = service.getLocationList(context);
+        final String json = mapper.writeValueAsString(locs);
+        log.debug("json of location list: {}", json);
+        response.getWriter().write(json);
+    }
+
+    @ResourceMapping(value = "supervisor-list")
+    public void supervisorListResource(ResourceRequest request, ResourceResponse response)
+            throws IOException {
+        log.debug("Processing AJAX resource request for supervisor list");
+
+        final EmployeeRequestContext context = new EmployeeRequestContext(request);
+        final Supervisor[] supervisors = service.getSupervisorList(context);
+        final String json = mapper.writeValueAsString(supervisors);
+        log.debug("json of supervisor list: {}", json);
+        response.getWriter().write(json);
     }
 }

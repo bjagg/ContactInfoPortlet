@@ -101,6 +101,18 @@
                 <value>http://localhost:8080/contact-info-portlet/sample/employee.json</value>
             </preference>
             <preference>
+                <name>departments.url</name>
+                <value>http://localhost:8080/contact-info-portlet/sample/departments.json</value>
+            </preference>
+            <preference>
+                <name>locations.url</name>
+                <value>http://localhost:8080/contact-info-portlet/sample/locations.json</value>
+            </preference>
+            <preference>
+                <name>supervisors.url</name>
+                <value>http://localhost:8080/contact-info-portlet/sample/supervisors.json</value>
+            </preference>
+            <preference>
                 <name>directoryInfo.userId</name>
                 <value>tartanId</value>
             </preference>

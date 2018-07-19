@@ -30,4 +30,10 @@ public interface EmployeeService {
     EmployeeInfo getEmployeeInfo(EmployeeRequestContext context);
 
     void saveEmployeeInfo(EmployeeInfo info);
+
+    Department[] getDepartmentList(EmployeeRequestContext context);
+
+    Location[] getLocationList(EmployeeRequestContext context);
+
+    Supervisor[] getSupervisorList(EmployeeRequestContext context);
 }
