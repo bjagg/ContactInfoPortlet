@@ -85,10 +85,38 @@ public class EmployeeServiceImpl implements EmployeeService {
         } catch (Exception e) {
             log.error("error reading directory info url " + context.getDirectoryUrl(), e);
         }
+        replaceNulls(info);
         info.setUsername(context.getUsername());
         mergeSavedValues(info);
         log.debug(info.toString());
         return info;
+    }
+
+    private void replaceNulls(DirectoryInfo info) {
+        if (info == null) {
+            return;
+        }
+        if (info.getDept() == null) {
+            info.setDept("");
+        }
+        if (info.getFax() == null) {
+            info.setFax("");
+        }
+        if (info.getHours() == null) {
+            info.setHours("");
+        }
+        if (info.getLocation() == null) {
+            info.setLocation("");
+        }
+        if (info.getPhone() == null) {
+            info.setPhone("");
+        }
+        if (info.getSupervisor() == null) {
+            info.setSupervisor("");
+        }
+        if (info.getTitle() == null) {
+            info.setTitle("");
+        }
     }
 
     private void mergeSavedValues(DirectoryInfo info) {
@@ -129,7 +157,26 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (info != null) {
             em.detach(info);
         }
+        replaceNulls(info);
         return info;
+    }
+
+    private void replaceNulls(EmployeeInfo info) {
+        if (info == null) {
+            return;
+        }
+        if (info.getBio() == null) {
+            info.setBio("");
+        }
+        if (info.getCredentials() == null) {
+            info.setCredentials("");
+        }
+        if (info.getEmergencyPhone() == null) {
+            info.setEmergencyPhone("");
+        }
+        if (info.getPersonalUrl() == null) {
+            info.setPersonalUrl("");
+        }
     }
 
     @Transactional

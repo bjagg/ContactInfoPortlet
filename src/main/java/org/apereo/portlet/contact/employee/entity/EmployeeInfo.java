@@ -27,10 +27,10 @@ import lombok.NonNull;
 @Table(name = "contact_emp_info")
 public class EmployeeInfo {
     @Id @NonNull private String username;
-    private String emergencyPhone;
-    private String bio;
-    private String credentials;
-    private String personalUrl;
+    private String emergencyPhone = "";
+    private String bio = "";
+    private String credentials = "";
+    private String personalUrl = "";
 
     public EmployeeInfo(String username) {
         this.username = username;

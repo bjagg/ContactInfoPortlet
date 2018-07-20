@@ -14,16 +14,14 @@
  */
 package org.apereo.portlet.contact.employee.mvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.portlet.contact.employee.entity.DirectoryInfo;
 import org.apereo.portlet.contact.employee.entity.EmployeeInfo;
@@ -187,7 +185,7 @@ public class EmployeeController {
         final EmployeeRequestContext context = new EmployeeRequestContext(request);
         final Department[] depts = service.getDepartmentList(context);
         final String json = mapper.writeValueAsString(depts);
-        log.debug("json of department list: {}", json);
+        // log.debug("json of department list: {}", json);
         response.getWriter().write(json);
     }
 
@@ -199,7 +197,7 @@ public class EmployeeController {
         final EmployeeRequestContext context = new EmployeeRequestContext(request);
         final Location[] locs = service.getLocationList(context);
         final String json = mapper.writeValueAsString(locs);
-        log.debug("json of location list: {}", json);
+        // log.debug("json of location list: {}", json);
         response.getWriter().write(json);
     }
 
@@ -211,7 +209,7 @@ public class EmployeeController {
         final EmployeeRequestContext context = new EmployeeRequestContext(request);
         final Supervisor[] supervisors = service.getSupervisorList(context);
         final String json = mapper.writeValueAsString(supervisors);
-        log.debug("json of supervisor list: {}", json);
+        // log.debug("json of supervisor list: {}", json);
         response.getWriter().write(json);
     }
 }

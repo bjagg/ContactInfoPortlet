@@ -27,13 +27,13 @@ import lombok.NonNull;
 @Table(name = "contact_dir_info")
 public class DirectoryInfo {
     @Id @NonNull private String username;
-    private String title;
-    private String dept;
-    private String phone;
-    private String location;
-    private String hours;
-    private String fax;
-    private String supervisor;
+    private String title = "";
+    private String dept = "";
+    private String phone = "";
+    private String location = "";
+    private String hours = "";
+    private String fax = "";
+    private String supervisor = "";
 
     public DirectoryInfo(String username) {
         this.username = username;
