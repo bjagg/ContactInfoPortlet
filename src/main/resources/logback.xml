@@ -98,4 +98,7 @@
     <logger name="org.apereo.portlet.contact" additivity="false" level="DEBUG">
         <appender-ref ref="LOG" />
     </logger>
+    <logger name="org.apereo.portal.soffit" additivity="false" level="DEBUG">
+        <appender-ref ref="LOG" />
+    </logger>
 </configuration>
